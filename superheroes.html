@@ -79,20 +79,16 @@
         for (let hero of heroes) {
           heroesContent += `<div class="hero">
                 <h2>${hero.name}</h2>
+                <img src="${hero.image}" style="width:300px"/>
                 <div>${hero.description.Universe}</div>
                 <div>${hero.description.AlterEgo}</div>
                 <div>${hero.description.Occupation}</div>
                 <div>${hero.description.Superpowers}</div>
                 <label for="rate">Rate the hero (out of 10):</label>
-                <input type="number" id="rate" name="rate"><button type="button" onclick="setToLS()">Save</button>
+                <input type="number" id="rate" name="rate"><button data-name="${hero.name}" type="button" onclick="setToLS(event)">Save</button>
                 </div>`;
 
-                
-
-          let img = document.createElement("img");
-          img.src = hero.image;
-          img.style.width = "25%";
-          document.body.appendChild(img);
+              
           
         }
 
@@ -101,18 +97,24 @@
 
         document.getElementById("heroesContainer").innerHTML = heroesContent;
         
-         setToLS(heroes);
+         setToLS(event);
+         
        
       });
 
-      function setToLS(heroes) {
+      function setToLS(event) {
+        
         for (i=0; i< heroes.length; i++) {
           let key = heroes[i].name;
           console.log(key)
-          let rate = document.getElementById("rate").value;
-        console.log(rate)
+        // let rate = document.getElementById("rate").value; - нельзя в цикле использовать id
+        // пара ключ-значение по каждому герою
+        // console.log(event.target.previousSibling.value)
+        // console.log(event.target.dataset.name)
+}
+        
         localStorage.setItem(key, JSON.stringify(rate))
-      } }
+      } 
 
       
       
