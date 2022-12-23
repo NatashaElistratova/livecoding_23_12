@@ -42,41 +42,99 @@ let json = `[
         
     }
 ]`;
+// Variant 1
+// document.addEventListener("DOMContentLoaded", function (event) {
+// let heroes = JSON.parse(json);
 
+// let heroesContent = "";
+
+// for (let hero of heroes) {
+//     hero.rating = JSON.parse(localStorage.getItem(hero.name));
+//     heroesContent += `<div class="hero">
+//         <h2>${hero.name}</h2>
+//         <img src="${hero.image}" style="width:300px"/>
+//         <div>${hero.description.Universe}</div>
+//         <div>${hero.description.AlterEgo}</div>
+//         <div>${hero.description.Occupation}</div>
+//         <div>${hero.description.Superpowers}</div>
+//         <label for="rate">Rate the hero (out of 10):</label>
+//         <input type="number" name="rate" value="${hero.rating}"><button data-name="${hero.name}" type="button" onclick="setToLS(event)">Save</button>
+//         </div>`;
+// }
+
+// document.getElementById("heroesContainer").innerHTML = heroesContent;
+// });
+
+// function setToLS(event) {
+//     const heroName = event.target.dataset.name;
+//     const heroRating = event.target.previousSibling.value;
+//     localStorage.setItem(heroName, JSON.stringify(heroRating));
+// }
+
+
+// Variant 2
+// document.addEventListener("DOMContentLoaded", function (event) {
+// let heroes = JSON.parse(json);
+
+// let heroesContent = "";
+
+// for (let hero of heroes) {
+//     hero.rating = JSON.parse(localStorage.getItem('ratings'))[hero.name];
+//     heroesContent += `<div class="hero">
+//         <h2>${hero.name}</h2>
+//         <img src="${hero.image}" style="width:300px"/>
+//         <div>${hero.description.Universe}</div>
+//         <div>${hero.description.AlterEgo}</div>
+//         <div>${hero.description.Occupation}</div>
+//         <div>${hero.description.Superpowers}</div>
+//         <label for="rate">Rate the hero (out of 10):</label>
+//         <input type="number" name="rate" value="${hero.rating}"><button data-name="${hero.name}" type="button" onclick="setToLS(event)">Save</button>
+//         </div>`;
+// }
+
+// document.getElementById("heroesContainer").innerHTML = heroesContent;
+// });
+
+// function setToLS(event) {
+//     const heroName = event.target.dataset.name;
+//     const heroRating = event.target.previousSibling.value;
+//     const ratings = JSON.parse(localStorage.getItem('ratings'));
+//     ratings[heroName] = heroRating;
+//     localStorage.setItem('ratings', JSON.stringify(ratings));
+// }
+
+// Variant 3
 document.addEventListener("DOMContentLoaded", function (event) {
-let heroes = JSON.parse(json);
-
-let heroesContent = "";
-
-for (let hero of heroes) {
-    heroesContent += `<div class="hero">
-        <h2>${hero.name}</h2>
-        <img src="${hero.image}" style="width:300px"/>
-        <div>${hero.description.Universe}</div>
-        <div>${hero.description.AlterEgo}</div>
-        <div>${hero.description.Occupation}</div>
-        <div>${hero.description.Superpowers}</div>
-        <label for="rate">Rate the hero (out of 10):</label>
-        <input type="number" id="rate" name="rate"><button data-name="${hero.name}" type="button" onclick="setToLS(event)">Save</button>
-        </div>`;
-}
-
-document.getElementById("heroesContainer").innerHTML = heroesContent;
-});
-
-function setToLS(event) {
-    for (i=0; i< heroes.length; i++) {
-        let key = heroes[i].name;
-        console.log(key)
-    // let rate = document.getElementById("rate").value; - нельзя в цикле использовать id
-    // пара ключ-значение по каждому герою
-    // console.log(event.target.previousSibling.value)
-    // console.log(event.target.dataset.name)
+    if(!localStorage.getItem('heroes')) {
+        localStorage.setItem('heroes', json)
     }
-
-    localStorage.setItem(key, JSON.stringify(rate))
-} 
-
-  
+    let heroes = JSON.parse(localStorage.getItem('heroes'));
+    let heroesContent = "";
+    
+    for (let hero of heroes) {
+        heroesContent += `<div class="hero">
+            <h2>${hero.name}</h2>
+            <img src="${hero.image}" style="width:300px"/>
+            <div>${hero.description.Universe}</div>
+            <div>${hero.description.AlterEgo}</div>
+            <div>${hero.description.Occupation}</div>
+            <div>${hero.description.Superpowers}</div>
+            <label for="rate">Rate the hero (out of 10):</label>
+            <input type="number" name="rate" value="${hero.rating || 0}"><button data-name="${hero.name}" type="button" onclick="setToLS(event)">Save</button>
+            </div>`;
+    }
+    
+    document.getElementById("heroesContainer").innerHTML = heroesContent;
+    });
+    
+    function setToLS(event) {
+        const heroesFromLS = localStorage.getItem('heroes');
+        const heroes = JSON.parse(heroesFromLS);
+        const heroName = event.target.dataset.name;
+        const heroRating = event.target.previousSibling.value || '';
+        const hero = heroes.find(item => item.name === heroName);
+        hero.rating = heroRating;
+        localStorage.setItem('heroes', JSON.stringify(heroes));
+    }
   
   
